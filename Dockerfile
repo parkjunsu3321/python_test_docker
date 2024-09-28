@@ -1,17 +1,15 @@
-FROM node:12-alpine
+# 베이스 이미지로 Python 사용
+FROM python:3.9-slim
 
-WORKDIR /app
-COPY *.json ./
-COPY *.js ./
+# 컨테이너 내에서 작업할 디렉토리 설정
+WORKDIR /usr/src/app
 
-COPY ./bin ./bin/
-COPY ./public ./public/
-COPY ./routes ./routes/
-COPY ./views ./views/
+# 모든 Python 파일 복사
+COPY *.py ./
 
-RUN chown -Rf node:node .
+# 필요한 패키지 설치
+COPY requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
 
-USER node
-EXPOSE 3000
-RUN npm ci --only=production
-ENTRYPOINT [ "npm", "start" ]
+# CMD는 기본적으로 아무것도 실행하지 않도록 설정
+CMD ["tail", "-f", "/dev/null"]
